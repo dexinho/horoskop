@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <button id="loadButton">Input date</button>
+    <p id="znak"></p>
+    <script>
+        const button = document.getElementById('loadButton')
+        const p = document.getElementById('znak')
+        button.style.width = '200px'
+        button.style.height = '50px'
+        button.style.backgroundColor = 'maroon'
+        button.style.color = 'white'
+        document.getElementById('loadButton').addEventListener('click', function () {
+            const date = prompt('Unesite datum').replace(/0?(\d+)[0 ./-]?[0 ./-]?(\d+)/, '$1 $2').split(' ')
+            p.innerText = ''
+            fetch('./JSONhoroskop.txt')
+                .then(response => response.json())
+                .then(data => {
+                    // Once the JSON file is loaded and parsed, you can use the data as needed
+
+                    function unesiTekstZaZnak(signs){
+                        for (const finalSign in signs) {
+                            if (finalSign === 'Ovan') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/ovan.jpg")'
+                            else if (finalSign === 'Bik') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/bik.jpg")'
+                            else if (finalSign === 'Blizanci') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/blizanci.webp")'
+                            else if (finalSign === 'Rak') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/rak.jpg")'
+                            else if (finalSign === 'Lav') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/lav.jpg")'
+                            else if (finalSign === 'Djevica') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/djevica.jpg")'
+                            else if (finalSign === 'Vaga') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/vaga.jpeg")'
+                            else if (finalSign === 'Skorpija') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/skorpija.jpg")'
+                            else if (finalSign === 'Strijelac') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/strijelac.jpg")'
+                            else if (finalSign === 'Jarac') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/jarac.jpg")'
+                            else if (finalSign === 'Vodolija') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/vodolija.jpg")'
+                            else if (finalSign === 'Ribe') document.body.style.backgroundImage = 'url("./horoskop_znakovi_slike/ribe.jpg")'
+                            const color = 'gold'
+                            const boldKeys = document.createElement('span')
+                            const boldValues = document.createElement('span')
+                            const semiColon = document.createElement('span')
+                            boldKeys.innerText = finalSign
+                            boldKeys.style.fontSize = '20px'
+                            boldKeys.style.fontWeight = 'bold'
+                            boldKeys.style.color = color
+                            boldValues.innerText = signs[finalSign]
+                            boldValues.style.fontSize = '15px'
+                            boldValues.style.color = color
+                            semiColon.innerText = ': '
+                            semiColon.style.color = color
+                            p.append(boldKeys, semiColon, boldValues, document.createElement('br'))
+                        }
+                        document.body.style.top = '0'
+                        document.body.style.left = '0'
+                        document.body.style.width = '550px'
+                        document.body.style.height = '950px'
+                        document.body.style.backgroundPosition = 'center'
+                        document.body.style.backgroundRepeat = 'no-repeat'
+                        document.body.style.backgroundSize = '100% 100%'
+                        
+                    }
+
+                    // For example, if your JSON data contains an array of signs, you can loop through them
+                    for (const signs of data) {
+                        for (const signName in signs) {
+                            if (signs[signName][0] === '(') {
+                                let currentRangeDate = signs[signName].replace(/\((\d{2}).(\d+). [–-] (\d{2}).(\d+).\)/, '$1 $2 $3 $4').split(' ')
+                                if (date[1] === currentRangeDate[1]) {
+                                    if (Number(date[0]) >= Number(currentRangeDate[0])) {
+                                        unesiTekstZaZnak(signs)
+                                    }
+                                }
+                                else if (date[1] === currentRangeDate[3]) {
+                                    if (Number(date[0]) <= Number(currentRangeDate[2])) {
+                                        unesiTekstZaZnak(signs)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Do whatever you need with each sign object
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading the JSON file:', error);
+                });
+        });
+    </script>
+
+</body>
+
+</html>
